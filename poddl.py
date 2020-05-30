@@ -2,8 +2,8 @@ import os
 import re
 import requests
 import argparse
-from lxml import etree
 from unidecode import unidecode
+from xml.etree import ElementTree
 
 parser = argparse.ArgumentParser(description='A basic RSS podcast downloading script')
 parser.add_argument('--url', help='The RSS feed URL', required=True)
@@ -11,8 +11,8 @@ parser.add_argument('--summary', help='Show a summary of available episodes', ac
 args = parser.parse_args()
 
 r = requests.get(args.url)
-rss_xml = etree.fromstring(r.content)
-items = rss_xml.xpath('/rss/channel/item')
+rss_xml = ElementTree.fromstring(r.content)
+items = rss_xml.findall('channel/item')
 items.reverse()
 
 for idx, item in enumerate(items, start=1):

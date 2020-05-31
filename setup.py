@@ -11,7 +11,7 @@ README = (HERE / "README.md").read_text()
 setup(
     name="poddl",
     version="0.2.3",
-    description="A basic podcast-downloading tool",
+    description="Downloads podcasts from RSS feeds",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/benkyriakou/poddl",

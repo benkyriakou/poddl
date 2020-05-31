@@ -1,6 +1,6 @@
 # poddl
 
-A basic podcast-downloading tool.
+poddl downloads podcasts from RSS feeds, both as a CLI tool and a Python library.
 
 ## Installation
 

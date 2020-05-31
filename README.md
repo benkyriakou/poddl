@@ -2,6 +2,8 @@
 
 poddl downloads podcasts from RSS feeds, both as a CLI tool and a Python library.
 
+poddl attempts to achieve filesystem compatibility by ASCII-fying podcast titles using a combination of [unidecode](https://github.com/avian2/unidecode) and character-stripping, so the titles you see may not be exactly the same as those given in the RSS feed.
+
 ## Installation
 
 Install via `pip`:
@@ -54,10 +56,12 @@ You can get a listing of the available podcasts without downloading them using `
 ```python3
 from poddl import get
 
-get('https://example.com/rss', summary=True)
+summary = get('https://example.com/rss', summary=True)
 ```
 
-And you can limit them number retrieved with `limit`:
+Here summary will be a list of podcast titles.
+
+You can limit the number retrieved with `limit`:
 
 ```python3
 from poddl import get

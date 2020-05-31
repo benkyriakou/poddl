@@ -1,3 +1,4 @@
+import sys
 import poddl
 import argparse
 import logging
@@ -19,4 +20,9 @@ def main():
     parser.add_argument('--limit', help="Limit the number of items retrieved", type=int, default=-1)
     args = parser.parse_args()
 
-    poddl.get(args.url, args.destination, limit=args.limit, summary=args.summary)
+    try:
+        poddl.get(args.url, args.destination, limit=args.limit, summary=args.summary)
+    except poddl.exceptions.PoddlException as e:
+        sys.exit(e)
+    except Exception as e:
+        sys.exit('Unexpected exception: {0}'.format(e))

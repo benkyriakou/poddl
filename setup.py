@@ -19,6 +19,7 @@ setup(
     author_email="benkyriakou@users.noreply.github.com",
     license="MIT",
     classifiers=[
+        "Development Status :: 4 - Beta",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     ],
     packages=["poddl"],

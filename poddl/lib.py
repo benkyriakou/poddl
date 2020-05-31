@@ -25,7 +25,8 @@ def get(url, destination, limit=-1, summary=False):
     except FileExistsError:
         pass
 
-    logger.info('Downloading files to "{0}"...'.format(destination))
+    if not summary:
+        logger.info('Downloading files to "{0}"...'.format(destination))
     
     for idx, item in enumerate(items, start=1):
         if 0 < limit < idx:

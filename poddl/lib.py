@@ -12,8 +12,17 @@ logger = logging.getLogger('poddl')
 
 def get(url, destination, limit=-1, summary=False):
     destination = os.path.expanduser(destination)
-    r = requests.get(url)
-    rss_xml = ElementTree.fromstring(r.content)
+
+    try:
+        r = requests.get(url)
+    except requests.exceptions.RequestException:
+        sys.exit('Unable to retrieve content from RSS feed "{0}"'.format(url))
+
+    try:
+        rss_xml = ElementTree.fromstring(r.content)
+    except ElementTree.ParseError:
+        sys.exit('Unable to parse URL contents as XML')
+
     items = rss_xml.findall('channel/item')
     items.reverse()
 
@@ -36,7 +45,7 @@ def get(url, destination, limit=-1, summary=False):
         ascii_title = re.sub(r'[^a-z0-9._\- ]', '', unidecode(item.find('title').text), flags=re.IGNORECASE)
     
         try:
-            url = item.find('enclosure[@type="audio/mpeg"]').get('url')
+            episode_url = item.find('enclosure[@type="audio/mpeg"]').get('url')
         except AttributeError as e:
             logger.warning('Could not find a podcast URL for "{0}'.format(ascii_title))
             continue
@@ -56,8 +65,11 @@ def get(url, destination, limit=-1, summary=False):
                     sys.exit('Unable to write to directory "{0}/"'.format(destination))
     
             logger.info('Downloading "{0}" ({1} of {2})...'.format(ascii_title, idx, len(items)))
-    
-            r = requests.get(url)
-    
-            with open(destination_path, 'wb') as fh:
-                fh.write(r.content)
+
+            try:
+                r = requests.get(episode_url)
+
+                with open(destination_path, 'wb') as fh:
+                    fh.write(r.content)
+            except requests.exceptions.RequestException:
+                sys.exit('Error retrieving episode from "{0}"'.format(episode_url))

@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="poddl",
-    version="0.1.0",
+    version="0.2.1",
     description="A basic podcast-downloading tool",
     long_description=README,
     long_description_content_type="text/markdown",

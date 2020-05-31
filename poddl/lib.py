@@ -7,10 +7,21 @@ from xml.etree import ElementTree
 
 
 def get(url, destination, limit=-1, summary=False):
+    destination = os.path.expanduser(destination)
     r = requests.get(url)
     rss_xml = ElementTree.fromstring(r.content)
     items = rss_xml.findall('channel/item')
     items.reverse()
+
+    try:
+        os.mkdir(destination)
+    except (PermissionError, FileNotFoundError):
+        print('Could not create directory "{0}/"'.format(destination))
+        exit(1)
+    except FileExistsError:
+        pass
+
+    print('Downloading files to "{0}"...'.format(destination))
     
     for idx, item in enumerate(items, start=1):
         if 0 < limit < idx:
@@ -27,15 +38,15 @@ def get(url, destination, limit=-1, summary=False):
         if summary:
             print('{0} ({1} of {2})'.format(ascii_title, idx, len(items)))
         else:
-            destination = os.path.join(destination, '{0}.mp3'.format(ascii_title))
+            destination_path = os.path.join(destination, '{0}.mp3'.format(ascii_title))
     
-            if os.path.exists(destination):
-                print('"{0}" already exists, skipping'.format(destination))
+            if os.path.exists(destination_path):
+                print('"{0}" already exists, skipping'.format(destination_path))
                 continue
             else:
                 try:
-                    Path(destination).touch()
-                except FileNotFoundError as e:
+                    Path(destination_path).touch()
+                except FileNotFoundError:
                     print('Unable to write to directory "{0}/"'.format(destination))
                     exit(1)
     
@@ -43,5 +54,5 @@ def get(url, destination, limit=-1, summary=False):
     
             r = requests.get(url)
     
-            with open(destination, 'wb') as fh:
+            with open(destination_path, 'wb') as fh:
                 fh.write(r.content)

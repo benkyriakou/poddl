@@ -1,8 +1,16 @@
 import poddl
 import argparse
+import logging
 
 
 def main():
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter('%(message)s'))
+    handler.setLevel(logging.INFO)
+    logger = logging.getLogger('poddl')
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+
     parser = argparse.ArgumentParser(description='A basic RSS podcast downloading script')
     parser.add_argument('--url', help='The RSS feed URL', required=True, type=str)
     parser.add_argument('--summary', help='Show a summary of available episodes', action='store_true')
